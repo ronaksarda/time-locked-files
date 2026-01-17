@@ -1,74 +1,100 @@
-# Time-Locked File Locker (C)
+# Time-Locked File Locker
 
-A command-line file access control utility written in C that allows files to be locked using a password and a time limit.  
-While locked, files cannot be accessed or modified directly and must be handled through the program.
+A C-based command-line program that restricts access to a file until a specified time using a password.
 
----
-
-## Overview
-
-This project provides controlled access to files by combining:
-- Password-based authentication
-- Time-based locking
-- Persistent metadata storage using a binary file
-
-It is designed for scenarios where files need to be temporarily protected and accessed only under specific conditions.
+This project was built as an early independent exercise to understand file handling, time-based constraints, and basic access control through implementation.
 
 ---
 
-## Features
+## Why This Project Exists
 
-- Lock existing files using a password
-- Time-based access control (in minutes)
-- Support for multiple locked files
-- Persistent storage using a binary vault file
-- Password attempt limiting
-- Emergency override mechanism
-- Controlled file access (view, edit, re-lock, delete)
-- Safe removal of locked files and records
+Most operating systems do not provide simple user-level mechanisms to restrict file access based on time.
 
----
+This project explores how such a constraint can be implemented in software by combining:
+- System time
+- File handling
+- Basic password-based access checks
 
-## How It Works
-
-1. A text file must already exist before it can be locked. ( create one if not available ) 
-2. When a file is locked:
-   - The original file is encrypted and renamed with a `.locked` extension
-   - File metadata is stored in a binary file (`vault.dat`)
-3. To access a file:
-   - The user provides the filename and password
-   - The program checks password attempts and lock time
-4. Files can only be accessed, edited, or deleted through the program.
+The goal was learning through building rather than creating a production-ready security tool.
 
 ---
 
-## Project Structure
-- timefile/
-- |--main.c //Menu , layout 
-- |--locker.c //Core logic for lock , unlock , edit and delete
-- |--vault.h //headerfile to store structure and functions
-- |--README.md
+## What It Does
 
-files generated at runtime : 
-- 'vault.dat'
-- '.locked'
-- '.exe' ( executable file ) 
+- Allows a user to lock a file with:
+  - A password
+  - A future unlock time
+- Prevents access to the file until the specified time is reached
+- Allows access only after successful password verification and time validation
 
-to compile : gcc main.c locker.c -o lockfile.exe
+---
 
-## Menu Options
-  1. Create Vault – Lock a file using password and time duration
-  2. Access Vault – Unlock and manage a locked file
-  3. Delete Vault – Remove a locked file and its record
-  4. Edit File – Temporarily decrypt, edit, and re-lock a file
-  5. Exit
+## How It Works (High Level)
+
+1. The user selects a file to lock
+2. A password and unlock time are set
+3. Until the unlock time is reached:
+   - File access is restricted
+4. After the unlock time:
+   - The correct password allows access
+
+Internally, the program relies on system time checks and file handling logic to enforce these rules.
+
+---
+
+## Installation
+
+Clone the repository and compile the source files:
+
+```bash
+git clone https://github.com/ronaksarda/time-locked-files.git
+cd time-locked-files
+gcc main.c locker.c -o time_lock
+.\time_lock
+
+```
+## Use Cases
+
+Restricting access to personal files until a future date
+
+Enforcing self-imposed time-based access rules
+
+Practicing constraint-based logic and file handling in C
+
+## File structure 
+
+- The project is organized into multiple source files separating the main program flow and core locking logic.
+
+- The exact structure may change as the project evolves.
 
 ## Limitations
-  1. Uses XOR-based encryption (not intended for high-security applications)
-  2. Filenames with spaces are not supported
-  3. Password input is visible in the terminal
-  4. Designed for local file access control
 
-## Author 
-Ronak Sarda
-github : https://github.com/ronaksarda
+- This project is intended for learning purposes only
+
+- Password handling is basic and not secure by modern standards
+
+- File access control is implemented at the program level, not the OS level
+
+- Not suitable for production or real security use
+
+## What I Learned
+
+- Working with system time in C
+
+- Handling files and enforcing access rules
+
+- Translating real-world constraints into program logic
+
+- Understanding how small design decisions affect correctness
+
+## Future Improvements
+
+- Encrypting locked files
+
+- Improving password handling
+
+- Better error handling and user feedback
+
+- Cross-platform compatibility
+
+# Author : Ronak Sarda 
